@@ -1,0 +1,11 @@
+//TODO Conexión con la base de datos mediante Java.
+//TODO Manejo de la conexión mediante un menú de terminal que debe tener:
+ //TODO Diferentes opciones que permitan consulta sobre la información. Ejemplos:
+   //TODO Seleccionar todos los elementos que contengan un texto concreto.
+   //TODO Seleccionar todos los elementos que cumplan una condición.
+   //TODO Seleccionar elementos concretos.
+ //TODO Posibilidad de modificar un registro concreto de información. Ejemplo:
+   //TODO Seleccionar un elemento concreto y permitir su modificación.
+ //TODO Posibilidad de modificar diferentes registros de información.
+ //TODO Posibilidad de eliminar un registro concreto de información.
+ //TODO Posibilidad de eliminar un conjunto de registros de información que cumplan un condición.
