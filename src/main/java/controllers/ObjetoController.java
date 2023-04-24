@@ -1,6 +1,5 @@
 package controllers;
 
-import models.Objeto;
 import javax.xml.xquery.XQResultSequence;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,18 +28,18 @@ public class ObjetoController {
 
     /**
      * Método que permite introducir un objeto en la BBDD.
-     *
-     * @param objeto Objeto de la clase que se controla.
      */
-    public void addObjeto(Objeto objeto) {
-        String xquery = "update insert \n" +
-                "   <Objeto>\n" +
-                "        <Descripcion>"+objeto.getDescripcion()+"</Descripcion>\n" +
-                "        <Icono>"+objeto.getIcono()+"</Icono>\n" +
-                "        <Id>"+objeto.getId()+"</Id>\n" +
-                "        <Nombre>"+objeto.getNombre()+"</Nombre>\n" +
-                "    </Objeto>" + " into doc('/db/tboia/Objetos.xml')/Objetos" ;
-        ec.executeCommand(xquery);
+    public void addObjeto() {
+        String objeto = "<Objeto>\n";
+        for (String col : colsName) {
+            System.out.println();
+            System.out.print("Valor para " + col + ": ");
+            objeto = objeto.concat("   <" + col + ">" + sc.nextLine() + "</" + col + ">\n");
+        }
+        objeto = objeto.concat("</Objeto>");
+        String query = "update insert \n" + objeto + " into doc('/db/tboia/Objetos.xml')/Objetos";
+        System.out.println(query);
+        ec.executeCommand(query);
     }
 
     /**
@@ -49,12 +48,22 @@ public class ObjetoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void selectRegisterByCondition(int columna){
+    public void selectRegisterByCondition(String columna){
+        List<String> condiciones = new ArrayList<>(Arrays.asList("<",">","=","!="));
+        String condicion;
+        boolean rep;
+        do{
+            rep = false;
+            System.out.print("Qué tipo de condición quieres comparar (>, >, =, !=): ");
+            condicion = sc.nextLine();
+            if(!condiciones.contains(condicion)){
+                System.out.println("ERROR, Indica una condición válida.");
+                rep = true;
+            }
+        }while(rep);
+
         System.out.print("Cuál es el valor que quieres seleccionar: ");
         String valor = sc.nextLine();
-
-        System.out.print("Qué tipo de condición quieres comparar: ");
-        String condicion = sc.nextLine();
 
         XQResultSequence xqrs = ec.executeQuery("for $objeto in doc('/db/tboia/Objetos.xml')/Objetos/Objeto where $objeto/"+columna+" "+condicion+" '"+valor+"' return $objeto");
         ec.printResultSequence(xqrs);
@@ -65,7 +74,7 @@ public class ObjetoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void selectObjetoTableColumn(int columna) {
+    public void selectObjetoTableColumn(String columna) {
         XQResultSequence xqrs = ec.executeQuery("for $objeto in doc('/db/tboia/Objetos.xml')/Objetos/Objeto return $objeto/"+columna);
         ec.printResultSequence(xqrs);
     }
@@ -76,7 +85,7 @@ public class ObjetoController {
      * @param objetoId Id del registro seleccionado.
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void updateObjeto(Integer objetoId, int columna) {
+    public void updateObjeto(Integer objetoId, String columna) {
         System.out.print("Cuál es el valor actualizado: ");
         String valor = sc.nextLine();
         ec.executeCommand("update value doc('/db/tboia/Objetos.xml')/Objetos/Objeto[Id = "+objetoId+"]/"+columna+" with '"+valor+"'");
@@ -88,7 +97,7 @@ public class ObjetoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void updateRegistersByCondition(int columna) {
+    public void updateRegistersByCondition(String columna) {
         System.out.print("Cuál es el valor que quieres actualizar: ");
         String valorAntiguo = sc.nextLine();
         System.out.print("Cómo será el valor actualizado: ");
@@ -103,7 +112,7 @@ public class ObjetoController {
      * @param objetoId Id del registro seleccionado.
      */
     public void deleteObjeto(int objetoId) {
-        ec.executeCommand("update value doc('/db/tboia/Objetos.xml')/Objetos/Objeto[Id = "+objetoId+"]");
+        ec.executeCommand("update delete doc('/db/tboia/Objetos.xml')/Objetos/Objeto[Id = "+objetoId+"]");
     }
 
     /**
@@ -112,10 +121,10 @@ public class ObjetoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void eliminarObjetoPorCondicionDeTexto(int columna) {
+    public void eliminarObjetoPorCondicionDeTexto(String columna) {
         System.out.print("Cuál es el valor que quieres eliminar: ");
         String valorAntiguo = sc.nextLine();
 
-        ec.executeCommand("update value doc('/db/tboia/Objetos.xml')/Objetos/Objeto["+columna+" = "+valorAntiguo+"]");
+        ec.executeCommand("update delete doc('/db/tboia/Objetos.xml')/Objetos/Objeto["+columna+" = "+valorAntiguo+"]");
     }
 }

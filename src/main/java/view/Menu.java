@@ -3,7 +3,6 @@ package view;
 import controllers.MonstruoController;
 import controllers.ObjetoController;
 import controllers.PersonajeController;
-import models.*;
 import java.util.List;
 import java.util.Scanner;
 
@@ -88,19 +87,20 @@ public class Menu {
      *
      * @param colsName Lista de columnas de la tabla las cuáles se quieren listar.
      */
-    public int listHeader(List<String> colsName){
+    public String listHeader(List<String> colsName){
         int opt = -1;
         do {
             for (int i = 0; i < colsName.size(); i++) {
                 System.out.println(i+1+". "+colsName.get(i));
             }
+            System.out.print("Selecciona la columna a gestionar: ");
             try {
                 opt = Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println(" ** ERROR. Formato erróneo **");
             }
         } while (opt < 1 || opt > colsName.size());
-        return opt;
+        return colsName.get(opt-1);
     }
 
     /**
@@ -111,8 +111,9 @@ public class Menu {
         PersonajeController pc = new PersonajeController();
         pc.selectAllPersonajes();
         Scanner sc = new Scanner(System.in);
-        boolean rep = false;
+        boolean rep;
         do {
+            rep = false;
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
             try {
                 option = Integer.parseInt(sc.nextLine());
@@ -132,8 +133,9 @@ public class Menu {
         MonstruoController mc = new MonstruoController();
         mc.selectAllMonstruos();
         Scanner sc = new Scanner(System.in);
-        boolean rep = false;
+        boolean rep;
         do {
+            rep = false;
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
             try {
                 option = Integer.parseInt(sc.nextLine());
@@ -153,8 +155,9 @@ public class Menu {
         ObjetoController oc = new ObjetoController();
         oc.selectAllObjetos();
         Scanner sc = new Scanner(System.in);
-        boolean rep = false;
+        boolean rep;
         do {
+            rep = false;
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
             try {
                 option = Integer.parseInt(sc.nextLine());

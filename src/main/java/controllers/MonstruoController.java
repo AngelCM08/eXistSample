@@ -1,7 +1,5 @@
 package controllers;
 
-import models.Monstruo;
-
 import javax.xml.xquery.XQResultSequence;
 import java.util.*;
 
@@ -30,19 +28,18 @@ public class MonstruoController {
 
     /**
      * Método que permite introducir un objeto en la BBDD.
-     *
-     * @param monstruo Objeto de la clase que se controla.
      */
-    public void addMonstruo(Monstruo monstruo) {
-        String xquery = "update insert \n" +
-                "   <Monstruo>\n" +
-                "        <Descripcion>"+monstruo.getDescripcion()+"</Descripcion>\n" +
-                "        <Icono>"+monstruo.getIcono()+"</Icono>\n" +
-                "        <Id>"+monstruo.getId()+"</Id>\n" +
-                "        <Nombre>"+monstruo.getNombre()+"</Nombre>\n" +
-                "        <Vida>"+monstruo.getVida()+"</Vida>\n" +
-                "    </Monstruo>" + " into doc('/db/tboia/Monstruos.xml')/Monstruos" ;
-        ec.executeCommand(xquery);
+    public void addMonstruo() {
+        String monstruo = "<Monstruo>\n";
+        for (String col : colsName) {
+            System.out.println();
+            System.out.print("Valor para " + col + ": ");
+            monstruo = monstruo.concat("   <" + col + ">" + sc.nextLine() + "</" + col + ">\n");
+        }
+        monstruo = monstruo.concat("</Monstruo>");
+        String query = "update insert \n" + monstruo + " into doc('/db/tboia/Monstruos.xml')/Monstruos";
+        System.out.println(query);
+        ec.executeCommand(query);
     }
 
     /**
@@ -51,12 +48,22 @@ public class MonstruoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void selectRegisterByCondition(int columna){
+    public void selectRegisterByCondition(String columna){
+        List<String> condiciones = new ArrayList<>(Arrays.asList("<",">","=","!="));
+        String condicion;
+        boolean rep;
+        do{
+            rep = false;
+            System.out.print("Qué tipo de condición quieres comparar (>, >, =, !=): ");
+            condicion = sc.nextLine();
+            if(!condiciones.contains(condicion)){
+                System.out.println("ERROR, Indica una condición válida.");
+                rep = true;
+            }
+        }while(rep);
+
         System.out.print("Cuál es el valor que quieres seleccionar: ");
         String valor = sc.nextLine();
-
-        System.out.print("Qué tipo de condición quieres comparar: ");
-        String condicion = sc.nextLine();
 
         XQResultSequence xqrs = ec.executeQuery("for $monstruo in doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo where $monstruo/"+columna+" "+condicion+" '"+valor+"' return $monstruo");
         ec.printResultSequence(xqrs);
@@ -67,7 +74,7 @@ public class MonstruoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void selectMonstruoTableColumn(int columna) {
+    public void selectMonstruoTableColumn(String columna) {
         XQResultSequence xqrs = ec.executeQuery("for $monstruo in doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo return $monstruo/"+columna);
         ec.printResultSequence(xqrs);
     }
@@ -78,7 +85,7 @@ public class MonstruoController {
      * @param monstruoId Id del registro seleccionado.
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void updateMonstruo(Integer monstruoId, int columna) {
+    public void updateMonstruo(Integer monstruoId, String columna) {
         System.out.print("Cuál es el valor actualizado: ");
         String valor = sc.nextLine();
         ec.executeCommand("update value doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo[Id = "+monstruoId+"]/"+columna+" with '"+valor+"'");
@@ -90,7 +97,7 @@ public class MonstruoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void updateRegistersByCondition(int columna) {
+    public void updateRegistersByCondition(String columna) {
         System.out.print("Cuál es el valor que quieres actualizar: ");
         String valorAntiguo = sc.nextLine();
         System.out.print("Cómo será el valor actualizado: ");
@@ -105,7 +112,7 @@ public class MonstruoController {
      * @param monstruoId Id del registro seleccionado.
      */
     public void deleteMonstruo(int monstruoId) {
-        ec.executeCommand("update value doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo[Id = "+monstruoId+"]");
+        ec.executeCommand("update delete doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo[Id = "+monstruoId+"]");
     }
 
     /**
@@ -114,10 +121,10 @@ public class MonstruoController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void eliminarMonstruoPorCondicionDeTexto(int columna) {
+    public void eliminarMonstruoPorCondicionDeTexto(String columna) {
         System.out.print("Cuál es el valor que quieres eliminar: ");
         String valorAntiguo = sc.nextLine();
 
-        ec.executeCommand("update value doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo["+columna+" = "+valorAntiguo+"]");
+        ec.executeCommand("update delete doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo["+columna+" = "+valorAntiguo+"]");
     }
 }

@@ -1,6 +1,5 @@
 package controllers;
 
-import models.Personaje;
 import javax.xml.xquery.XQResultSequence;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,160 +28,18 @@ public class PersonajeController {
 
     /**
      * Método que permite introducir un objeto en la BBDD.
-     *
-     * @param personaje Objeto de la clase que se controla.
      */
     public void addPersonaje() {
-        Personaje personaje = createPersonaje();
-        String xquery = "update insert \n" +
-                "   <Personaje>\n" +
-                "        <Cadencia>"+personaje.getCadencia()+"</Cadencia>\n" +
-                "        <Daño>"+personaje.getDaño()+"</Daño>\n" +
-                "        <Icono>"+personaje.getIcono()+"</Icono>\n" +
-                "        <Id>"+personaje.getId()+"</Id>\n" +
-                "        <Nombre>"+personaje.getNombre()+"</Nombre>\n" +
-                "        <Rango>"+personaje.getRango()+"</Rango>\n" +
-                "        <Suerte>"+personaje.getSuerte()+"</Suerte>\n" +
-                "        <Vel_Proyectil>"+personaje.getVel_proyectil()+"</Vel_Proyectil>\n" +
-                "        <Velocidad>"+personaje.getVelocidad()+"</Velocidad>\n" +
-                "        <Vida>"+personaje.getVida()+"</Vida>\n" +
-                "    </Personaje> into doc('/db/tboia/Personajes.xml')/Personajes";
-        ec.executeCommand(xquery);
-    }
-
-    private Personaje createPersonaje() {
-        int id;
-        String icono;
-        String nombre;
-        int vida;
-        String daño;
-        String cadencia;
-        String vel_proyectil;
-        String rango;
-        String velocidad;
-        int suerte;
-
-        boolean rep;
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
-        do{
-            rep = false;
-            System.out.print("Indica el valor de la Id: ");
-            try {
-                id = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println(" ** ERROR. Formato erróneo **");
-                rep = true;
-            }
-        }while(rep);
-
-
+        String personaje = "<Personaje>\n";
+        for (String col : colsName) {
+            System.out.println();
+            System.out.print("Valor para " + col + ": ");
+            personaje = personaje.concat("   <" + col + ">" + sc.nextLine() + "</" + col + ">\n");
+        }
+        personaje = personaje.concat("</Personaje>");
+        String query = "update insert \n" + personaje + " into doc('/db/tboia/Personajes.xml')/Personajes";
+        System.out.println(query);
+        ec.executeCommand(query);
     }
 
     /**
@@ -191,12 +48,22 @@ public class PersonajeController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void selectRegisterByCondition(int columna){
-        System.out.print("Cuál es el valor que quieres seleccionar: ");
-        String valor = sc.nextLine();
+    public void selectRegisterByCondition(String columna){
+        List<String> condiciones = new ArrayList<>(Arrays.asList("<",">","=","!="));
+        String condicion;
+        boolean rep;
+        do{
+            rep = false;
+            System.out.print("Qué tipo de condición quieres comparar (>, >, =, !=): ");
+            condicion = sc.nextLine();
+            if(!condiciones.contains(condicion)){
+                System.out.println("ERROR, Indica una condición válida.");
+                rep = true;
+            }
+        }while(rep);
 
-        System.out.print("Qué tipo de condición quieres comparar: ");
-        String condicion = sc.nextLine();
+        System.out.print("Cuál es el valor a seleccionar: ");
+        String valor = sc.nextLine();
 
         XQResultSequence xqrs = ec.executeQuery("for $personaje in doc('/db/tboia/Personajes.xml')/Personajes/Personaje where $personaje/"+columna+" "+condicion+" '"+valor+"' return $personaje");
         ec.printResultSequence(xqrs);
@@ -207,7 +74,7 @@ public class PersonajeController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void selectPersonajeTableColumn(int columna) {
+    public void selectPersonajeTableColumn(String columna) {
         XQResultSequence xqrs = ec.executeQuery("for $personaje in doc('/db/tboia/Personajes.xml')/Personajes/Personaje return $personaje/"+columna);
         ec.printResultSequence(xqrs);
     }
@@ -218,7 +85,7 @@ public class PersonajeController {
      * @param personajeId Id del registro seleccionado.
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void updatePersonaje(Integer personajeId, int columna) {
+    public void updatePersonaje(Integer personajeId, String columna) {
         System.out.print("Cuál es el valor actualizado: ");
         String valor = sc.nextLine();
         ec.executeCommand("update value doc('/db/tboia/Personajes.xml')/Personajes/Personaje[Id = "+personajeId+"]/"+columna+" with '"+valor+"'");
@@ -230,7 +97,7 @@ public class PersonajeController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void updateRegistersByCondition(int columna) {
+    public void updateRegistersByCondition(String columna) {
         System.out.print("Cuál es el valor que quieres actualizar: ");
         String valorAntiguo = sc.nextLine();
         System.out.print("Cómo será el valor actualizado: ");
@@ -245,7 +112,7 @@ public class PersonajeController {
      * @param personajeId Id del registro seleccionado.
      */
     public void deletePersonaje(int personajeId) {
-        ec.executeCommand("update value doc('/db/tboia/Personajes.xml')/Personajes/Personaje[Id = "+personajeId+"]");
+        ec.executeCommand("update delete doc('/db/tboia/Personajes.xml')/Personajes/Personaje[Id = "+personajeId+"]");
     }
 
     /**
@@ -254,10 +121,9 @@ public class PersonajeController {
      *
      * @param columna Columna seleccionada para hacer la selección.
      */
-    public void eliminarPersonajePorCondicionDeTexto(int columna) {
+    public void eliminarPersonajePorCondicionDeTexto(String columna) {
         System.out.print("Cuál es el valor que quieres eliminar: ");
-        String valorAntiguo = sc.nextLine();
-
-        ec.executeCommand("update value doc('/db/tboia/Personajes.xml')/Personajes/Personaje["+columna+" = "+valorAntiguo+"]");
+        String valor = sc.nextLine();
+        ec.executeCommand("update delete doc('/db/tboia/Personajes.xml')/Personajes/Personaje["+columna+" = "+valor+"]");
     }
 }
