@@ -1,4 +1,4 @@
-package net.xeill.elpuig;
+package models;
 
 /**
  * Clase que almacena la entidad del UML Personaje.
@@ -6,10 +6,10 @@ package net.xeill.elpuig;
  * @author Ángel Castro Merino
  */
 public class Personaje {
-    int id;
-    String icono;
-    String nombre;
-    int vida;
+    private int id;
+    private String icono;
+    private String nombre;
+    private int vida;
     private String daño;
     private String cadencia;
     private String vel_proyectil;

@@ -1,4 +1,4 @@
-package net.xeill.elpuig;
+package controllers;
 
 import javax.xml.xquery.XQConnection;
 import javax.xml.xquery.XQDataSource;
@@ -29,6 +29,15 @@ public class ExistController {
             XQExpression xqe = connection.createExpression();
             XQResultSequence xqrs = xqe.executeQuery(query);
             return xqrs;
+        } catch (XQException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void executeCommand(String query) {
+        try {
+            XQExpression xqe = connection.createExpression();
+            xqe.executeCommand(query);
         } catch (XQException e) {
             throw new RuntimeException(e);
         }
