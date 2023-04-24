@@ -18,8 +18,6 @@ public class PersonajeController {
 
     /**
      * Método para listar las entidades que existen en la tabla de la BBDD equivalente a la clase.
-     *
-     * @return Lista de objetos de la entidad que controla la clase.
      */
     public void selectAllPersonajes() {
         XQResultSequence xqrs = ec.executeQuery("for $personaje in doc('/db/tboia/Personajes.xml')/Personajes/Personaje return $personaje");

@@ -18,8 +18,6 @@ public class MonstruoController {
 
     /**
      * Método para listar las entidades que existen en la tabla de la BBDD equivalente a la clase.
-     *
-     * @return Lista de objetos de la entidad que controla la clase.
      */
     public void selectAllMonstruos() {
         XQResultSequence xqrs = ec.executeQuery("for $monstruo in doc('/db/tboia/Monstruos.xml')/Monstruos/Monstruo return $monstruo");

@@ -18,8 +18,6 @@ public class ObjetoController {
 
     /**
      * Método para listar las entidades que existen en la tabla de la BBDD equivalente a la clase.
-     *
-     * @return Lista de objetos de la entidad que controla la clase.
      */
     public void selectAllObjetos() {
         XQResultSequence xqrs = ec.executeQuery("for $objeto in doc('/db/tboia/Objetos.xml')/Objetos/Objeto return $objeto");
